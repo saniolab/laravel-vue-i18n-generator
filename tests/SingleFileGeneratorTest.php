@@ -10,7 +10,8 @@ class SingleFileGeneratorTest extends \Orchestra\Testbench\TestCase
     {
         $this->assertEquals(
             file_get_contents(__DIR__ . '/result/' . $expected),
-            (new Generator($this->config))->generateFromPath(__DIR__ . '/input/' . $input, $format, $withVendor));
+            (new Generator($this->config))->generateFromPath(__DIR__ . '/input/' . $input, $format, $withVendor)
+        );
 
         $this->config = [];
     }
@@ -47,12 +48,15 @@ class SingleFileGeneratorTest extends \Orchestra\Testbench\TestCase
 
         try {
             (new Generator([]))->generateFromPath($inputDir, $format);
-        } catch(RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertEquals('Invalid format passed: ' . $format, $e->getMessage());
+
             return;
         }
 
-// FIXME        $this->fail('No exception thrown for invalid format.');
+        // FIXME
+        // $this->fail('No exception thrown for invalid format.');
+        $this->markTestIncomplete('No exception thrown for invalid format.');
     }
 
     function testBasicWithTranslationString()
