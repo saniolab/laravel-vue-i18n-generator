@@ -2,19 +2,18 @@
 
 use MartinLindhe\VueInternationalizationGenerator\Generator;
 
-
 class MultiFileGeneratorTest extends \Orchestra\Testbench\TestCase
 {
     private $config = [];
 
     protected function getEnvironmentSetUp($app)
     {
-        $app->setBasePath(realpath(__DIR__ . '/..'));
+        $app->setBasePath(realpath(__DIR__.'/..'));
     }
 
     private function genOutDir()
     {
-        return '/tests/output/' . sha1(microtime(true) . mt_rand()) . '/';
+        return '/tests/output/'.sha1(microtime(true).mt_rand()).'/';
     }
 
     private function destroyTempFiles($dir)
@@ -35,23 +34,23 @@ class MultiFileGeneratorTest extends \Orchestra\Testbench\TestCase
     private function evaluateMultiOutput($input, $expected, $format = 'es6', $multiLocales = false)
     {
         $this->config['jsPath'] = $this->genOutDir();
-        $outDir = base_path() . $this->config['jsPath'];
-        $this->config['langPath'] = '/tests/input/' . $input;
+        $outDir = base_path().$this->config['jsPath'];
+        $this->config['langPath'] = '/tests/input/'.$input;
 
-        $out = (new Generator($this->config))->generateMultiple(__DIR__ . '/input/' . $input, 'es6', $multiLocales);
+        $out = (new Generator($this->config))->generateMultiple(__DIR__.'/input/'.$input, 'es6', $multiLocales);
         $this->config = [];
 
-        $expected = new RecursiveDirectoryIterator(base_path() . '/tests/result/' . $expected, FilesystemIterator::SKIP_DOTS);
+        $expected = new RecursiveDirectoryIterator(base_path().'/tests/result/'.$expected, FilesystemIterator::SKIP_DOTS);
 
         $expectedFiles = [];
 
         foreach ($expected as $path => $file) {
-            $resultFile = $outDir . $file->getFilename();
-            $expectedFiles[] = $resultFile . PHP_EOL;
+            $resultFile = $outDir.$file->getFilename();
+            $expectedFiles[] = $resultFile.PHP_EOL;
             $this->assertEquals(
                 file_get_contents($path),
                 file_get_contents($resultFile),
-                "File $resultFile doesn't match expected $path."
+                "File {$resultFile} doesn't match expected {$path}."
             );
         }
         asort($expectedFiles); // RDI is unordered

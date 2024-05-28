@@ -1,4 +1,5 @@
 <?php
+
 return [
     'yes' => 'see <a href="mailto:mail@com">',
     'no' => 'see <a href=":link">',
