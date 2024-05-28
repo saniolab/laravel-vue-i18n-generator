@@ -90,4 +90,6 @@ return [
    |
    */
     'escape_char' => '!',
+
+    'placeholder_template' => ':\w+',
 ];

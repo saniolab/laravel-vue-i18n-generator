@@ -310,9 +310,12 @@ class Generator
             $s = preg_replace($searchPipePattern, $threeColons, $s);
         }
 
+        $format = $this->config['placeholder_template'] ?? ":\w+";
+
         $escaped_escape_char = preg_quote($this->config['escape_char'], '/');
+
         return preg_replace_callback(
-            "/(?<!mailto|tel|{$escaped_escape_char}):\w+/",
+            "/(?<!mailto|tel|{$escaped_escape_char}){$format}/",
             function ($matches) {
                 return '{'.mb_substr($matches[0], 1).'}';
             },
@@ -330,9 +333,10 @@ class Generator
     protected function removeEscapeCharacter($s)
     {
         $escaped_escape_char = preg_quote($this->config['escape_char'], '/');
+        $format = $this->config['placeholder_template'] ?? ":\w+";
 
         return preg_replace_callback(
-            "/{$escaped_escape_char}(:\w+)/",
+            "/{$escaped_escape_char}({$format})/",
             function ($matches) {
                 return mb_substr($matches[0], 1);
             },
