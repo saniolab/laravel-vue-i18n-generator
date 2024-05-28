@@ -91,5 +91,14 @@ return [
    */
     'escape_char' => '!',
 
+    /*
+    |--------------------------------------------------------------------------
+    | Placeholder template Regex
+    |--------------------------------------------------------------------------
+    |
+    | Allows to define a custom placeholder template
+    | You can also overwrite the method how matched
+    | strings should be prepared using Generator::prepareMatchedStringsUsing($closure)
+     */
     'placeholder_template' => ':\w+',
 ];
