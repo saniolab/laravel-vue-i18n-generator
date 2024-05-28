@@ -98,20 +98,7 @@ class Generator
 
         $locales = $this->adjustVendor($locales);
 
-        $jsonLocales = json_encode($locales, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Could not generate JSON, error code '.json_last_error());
-        }
-
-        // formats other than 'es6' and 'umd' will become plain JSON
-        if ($format === 'es6') {
-            $jsBody = $this->getES6Module($jsonLocales);
-        } elseif ($format === 'umd') {
-            $jsBody = $this->getUMDModule($jsonLocales);
-        } else {
-            $jsBody = $jsonLocales;
-        }
+        $jsBody = $this->buildJsBody($locales, $format);
 
         return $jsBody;
     }
@@ -165,17 +152,7 @@ class Generator
         foreach ($this->filesToCreate as $fileName => $data) {
             $fileToCreate = $jsPath.$fileName.'.js';
             $createdFiles .= $fileToCreate.PHP_EOL;
-            $jsonLocales = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new Exception('Could not generate JSON, error code '.json_last_error());
-            }
-            if ($format === 'es6') {
-                $jsBody = $this->getES6Module($jsonLocales);
-            } elseif ($format === 'umd') {
-                $jsBody = $this->getUMDModule($jsonLocales);
-            } else {
-                $jsBody = $jsonLocales;
-            }
+            $jsBody = $this->buildJsBody($data, $format);
 
             if (! is_dir(dirname($fileToCreate))) {
                 mkdir(dirname($fileToCreate), 0o777, true);
@@ -420,5 +397,25 @@ class Generator
     protected function getES6Module($body)
     {
         return "export default {$body}";
+    }
+
+    protected function buildJsBody(array $locales, string $format): string
+    {
+        $jsonLocales = json_encode($locales, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new Exception('Could not generate JSON, error code '.json_last_error());
+        }
+
+        // formats other than 'es6' and 'umd' will become plain JSON
+        if ($format === 'es6') {
+            $jsBody = $this->getES6Module($jsonLocales);
+        } elseif ($format === 'umd') {
+            $jsBody = $this->getUMDModule($jsonLocales);
+        } else {
+            $jsBody = $jsonLocales;
+        }
+
+        return $jsBody;
     }
 }
