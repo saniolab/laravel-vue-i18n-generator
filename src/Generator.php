@@ -7,13 +7,15 @@ use Exception;
 
 class Generator
 {
-    private $config;
+    protected static $prepareMatchedStringsUsing;
 
-    private $availableLocales = [];
+    protected $config;
 
-    private $filesToCreate = [];
+    protected $availableLocales = [];
 
-    private $langFiles;
+    protected $filesToCreate = [];
+
+    protected $langFiles;
 
     public const VUEX_I18N = 'vuex-i18n';
     public const VUE_I18N = 'vue-i18n';
@@ -189,7 +191,7 @@ class Generator
      * @param  string  $path
      * @return array
      */
-    private function allocateLocaleJSON($path)
+    protected function allocateLocaleJSON($path)
     {
         // Ignore non *.json files (ex.: .gitignore, vim swap files etc.)
         if (pathinfo($path, PATHINFO_EXTENSION) !== 'json') {
@@ -207,7 +209,7 @@ class Generator
      * @param  string  $path
      * @return array
      */
-    private function allocateLocaleArray($path, $multiLocales = false)
+    protected function allocateLocaleArray($path, $multiLocales = false)
     {
         $data = [];
         $dirList = $this->getDirList($path);
@@ -260,7 +262,7 @@ class Generator
      * @param  string  $noExt
      * @return bool
      */
-    private function shouldIgnoreLangFile($noExt)
+    protected function shouldIgnoreLangFile($noExt)
     {
         // langFiles passed by option have priority
         if (isset($this->langFiles) && ! empty($this->langFiles)) {
@@ -274,7 +276,7 @@ class Generator
     /**
      * @return array
      */
-    private function adjustArray(array $arr)
+    protected function adjustArray(array $arr)
     {
         $res = [];
         foreach ($arr as $key => $val) {
@@ -296,7 +298,7 @@ class Generator
      * @param  array  $locales
      * @return array
      */
-    private function adjustVendor($locales)
+    protected function adjustVendor($locales)
     {
         if (isset($locales['vendor'])) {
             foreach ($locales['vendor'] as $vendor => $data) {
@@ -319,7 +321,7 @@ class Generator
      * @param  string  $s
      * @return string
      */
-    private function adjustString($s)
+    protected function adjustString($s)
     {
         if (! is_string($s)) {
             return $s;
@@ -348,7 +350,7 @@ class Generator
      * @param  string  $s
      * @return string
      */
-    private function removeEscapeCharacter($s)
+    protected function removeEscapeCharacter($s)
     {
         $escaped_escape_char = preg_quote($this->config['escape_char'], '/');
 
@@ -367,7 +369,7 @@ class Generator
      * @param  string  $path
      * @return array
      */
-    private function getDirList($path)
+    protected function getDirList($path)
     {
         return array_diff(scandir($path), ['.', '..']);
     }
@@ -378,7 +380,7 @@ class Generator
      * @param  string  $filename
      * @return string
      */
-    private function removeExtension($filename)
+    protected function removeExtension($filename)
     {
         $pos = mb_strrpos($filename, '.');
         if ($pos === false) {
@@ -394,7 +396,7 @@ class Generator
      * @param  string  $body
      * @return string
      */
-    private function getUMDModule($body)
+    protected function getUMDModule($body)
     {
         $js = <<<HEREDOC
             (function (global, factory) {
@@ -415,7 +417,7 @@ class Generator
      * @param  string  $body
      * @return string
      */
-    private function getES6Module($body)
+    protected function getES6Module($body)
     {
         return "export default {$body}";
     }
