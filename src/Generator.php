@@ -3,6 +3,7 @@
 namespace MartinLindhe\VueInternationalizationGenerator;
 
 use App;
+use Closure;
 use Exception;
 
 class Generator
@@ -164,6 +165,11 @@ class Generator
         return $createdFiles;
     }
 
+    public static function prepareMatchedStringsUsing(\Closure $closure)
+    {
+        static::$prepareMatchedStringsUsing = $closure;
+    }
+
     /**
      * @param  string  $path
      * @return array
@@ -317,7 +323,8 @@ class Generator
         return preg_replace_callback(
             "/(?<!mailto|tel|{$escaped_escape_char}){$format}/",
             function ($matches) {
-                return '{'.mb_substr($matches[0], 1).'}';
+
+                return '{'.$this->prepareMatchedString($matches[0]).'}';
             },
             $s
         );
@@ -338,7 +345,7 @@ class Generator
         return preg_replace_callback(
             "/{$escaped_escape_char}({$format})/",
             function ($matches) {
-                return mb_substr($matches[0], 1);
+                return $this->prepareMatchedString($matches[0]);
             },
             $s
         );
@@ -421,5 +428,14 @@ class Generator
         }
 
         return $jsBody;
+    }
+
+    protected function prepareMatchedString($match): string
+    {
+        if (static::$prepareMatchedStringsUsing instanceof Closure) {
+            return (static::$prepareMatchedStringsUsing)($match);
+        }
+
+        return mb_substr($match, 1);
     }
 }
