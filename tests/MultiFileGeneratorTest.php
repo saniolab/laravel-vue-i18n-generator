@@ -3,7 +3,7 @@
 namespace Tests;
 
 use FilesystemIterator;
-use MartinLindhe\VueInternationalizationGenerator\Generator;
+use Saniolab\VueInternationalizationGenerator\Generator;
 use Orchestra\Testbench\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;

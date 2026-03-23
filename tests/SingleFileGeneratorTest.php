@@ -3,7 +3,7 @@
 namespace Tests;
 
 use InvalidArgumentException;
-use MartinLindhe\VueInternationalizationGenerator\Generator;
+use Saniolab\VueInternationalizationGenerator\Generator;
 use Orchestra\Testbench\TestCase;
 
 class SingleFileGeneratorTest extends TestCase

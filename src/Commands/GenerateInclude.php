@@ -1,10 +1,10 @@
 <?php
 
-namespace MartinLindhe\VueInternationalizationGenerator\Commands;
+namespace Saniolab\VueInternationalizationGenerator\Commands;
 
 use Illuminate\Console\Command;
 use InvalidArgumentException;
-use MartinLindhe\VueInternationalizationGenerator\Generator;
+use Saniolab\VueInternationalizationGenerator\Generator;
 
 class GenerateInclude extends Command
 {

@@ -22,7 +22,7 @@ The service provider is registered automatically via `composer.json` `extra.lara
 Publish the config when you need to customize paths or the target i18n library:
 
 ```bash
-php artisan vendor:publish --provider="MartinLindhe\VueInternationalizationGenerator\GeneratorProvider"
+php artisan vendor:publish --provider="Saniolab\VueInternationalizationGenerator\GeneratorProvider"
 ```
 
 Adjust `jsPath`, `jsFile`, and other options in `config/vue-i18n-generator.php` as needed.

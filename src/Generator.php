@@ -1,6 +1,6 @@
 <?php
 
-namespace MartinLindhe\VueInternationalizationGenerator;
+namespace Saniolab\VueInternationalizationGenerator;
 
 use Closure;
 use Exception;

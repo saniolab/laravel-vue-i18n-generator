@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MartinLindhe\\VueInternationalizationGenerator\\": "src/"
+            "Saniolab\\VueInternationalizationGenerator\\": "src/"
         }
     },
     "autoload-dev": {
@@ -48,7 +48,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "MartinLindhe\\VueInternationalizationGenerator\\GeneratorProvider"
+                "Saniolab\\VueInternationalizationGenerator\\GeneratorProvider"
             ]
         }
     }
