@@ -4,7 +4,7 @@
 
 Generates a [vue-i18n](https://vue-i18n.intlify.dev/) compatible bundle from your [Laravel translations](https://laravel.com/docs/13.x/localization), for use with a [Vue](https://vuejs.org/) front end. Optional [vuex-i18n](https://github.com/dkfbasel/vuex-i18n) output is supported via config.
 
-This package is a maintained fork. It traces back to [martinlindhe/laravel-vue-i18n-generator](https://github.com/martinlindhe/laravel-vue-i18n-generator); install **`saniolab/laravel-vue-i18n-generator`** on Composer, not the unmaintained upstream names.
+This package is a maintained fork of https://github.com/martinlindhe/laravel-vue-i18n-generator.
 
 ### Requirements
 
