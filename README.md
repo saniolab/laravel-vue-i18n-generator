@@ -8,8 +8,8 @@ This package is a maintained fork of https://github.com/martinlindhe/laravel-vue
 
 ### Requirements
 
-- PHP 8.4 or 8.5
-- Laravel 13
+- PHP 8.2 or higher (use a version that matches your Laravel release)
+- Laravel 12 or 13
 
 ## Install
 
