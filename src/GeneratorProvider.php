@@ -6,19 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class GeneratorProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
-     * Perform post-registration booting of services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         $this->app->singleton('vue-i18n.generate', function () {
             return new Commands\GenerateInclude();
@@ -38,22 +26,7 @@ class GeneratorProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Register the service provider.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return ['vue-i18n-generator'];
     }
 }

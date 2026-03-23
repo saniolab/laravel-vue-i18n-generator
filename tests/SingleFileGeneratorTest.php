@@ -1,8 +1,12 @@
 <?php
 
-use MartinLindhe\VueInternationalizationGenerator\Generator;
+namespace Tests;
 
-class SingleFileGeneratorTest extends \Orchestra\Testbench\TestCase
+use InvalidArgumentException;
+use MartinLindhe\VueInternationalizationGenerator\Generator;
+use Orchestra\Testbench\TestCase;
+
+class SingleFileGeneratorTest extends TestCase
 {
     private $config = [];
 
@@ -46,17 +50,10 @@ class SingleFileGeneratorTest extends \Orchestra\Testbench\TestCase
         $format = 'es5';
         $inputDir = __DIR__.'/input/basic';
 
-        try {
-            (new Generator([]))->generateFromPath($inputDir, $format);
-        } catch (RuntimeException $e) {
-            $this->assertEquals('Invalid format passed: '.$format, $e->getMessage());
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid format passed: '.$format);
 
-            return;
-        }
-
-        // FIXME
-        // $this->fail('No exception thrown for invalid format.');
-        $this->markTestIncomplete('No exception thrown for invalid format.');
+        (new Generator([]))->generateFromPath($inputDir, $format);
     }
 
     public function testBasicWithTranslationString()

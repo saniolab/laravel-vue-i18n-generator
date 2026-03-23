@@ -3,6 +3,7 @@
 namespace MartinLindhe\VueInternationalizationGenerator\Commands;
 
 use Illuminate\Console\Command;
+use InvalidArgumentException;
 use MartinLindhe\VueInternationalizationGenerator\Generator;
 
 class GenerateInclude extends Command
@@ -24,11 +25,9 @@ class GenerateInclude extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
-     *
      * @throws \Exception
      */
-    public function handle()
+    public function handle(): int
     {
         $root = base_path().config('vue-i18n-generator.langPath');
         $config = config('vue-i18n-generator');
@@ -48,7 +47,7 @@ class GenerateInclude extends Command
         }
 
         if (! $this->isValidFormat($format)) {
-            throw new \RuntimeException('Invalid format passed: '.$format);
+            throw new InvalidArgumentException('Invalid format passed: '.$format);
         }
 
         if ($multipleFiles || $multipleLocales) {
@@ -59,7 +58,7 @@ class GenerateInclude extends Command
                 $this->info('Written to : '.$files);
             }
 
-            return;
+            return static::SUCCESS;
         }
 
         if ($langFiles) {
@@ -75,6 +74,8 @@ class GenerateInclude extends Command
         if ($config['showOutputMessages']) {
             $this->info('Written to : '.$jsFile);
         }
+
+        return static::SUCCESS;
     }
 
     /**
@@ -94,10 +95,8 @@ class GenerateInclude extends Command
      * @param  string  $format
      * @return bool
      */
-    private function isValidFormat($format)
+    private function isValidFormat(string $format): bool
     {
-        $supportedFormats = ['es6', 'umd', 'json'];
-
-        return in_array($format, $supportedFormats);
+        return in_array($format, Generator::SUPPORTED_FORMATS, true);
     }
 }

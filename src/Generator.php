@@ -2,13 +2,16 @@
 
 namespace MartinLindhe\VueInternationalizationGenerator;
 
-use App;
 use Closure;
 use Exception;
+use Illuminate\Support\Facades\App;
+use InvalidArgumentException;
 
 class Generator
 {
-    protected static $prepareMatchedStringsUsing;
+    public const SUPPORTED_FORMATS = ['es6', 'umd', 'json'];
+
+    protected static ?Closure $prepareMatchedStringsUsing = null;
 
     protected $config;
 
@@ -51,6 +54,8 @@ class Generator
      */
     public function generateFromPath($path, $format = 'es6', $withVendor = false, $langFiles = [])
     {
+        $this->assertValidFormat($format);
+
         if (! is_dir($path)) {
             throw new Exception('Directory not found: '.$path);
         }
@@ -76,9 +81,7 @@ class Generator
 
             $noExt = $this->removeExtension($fileinfo->getFilename());
             if ($noExt !== '') {
-                if (class_exists('App')) {
-                    App::setLocale($noExt);
-                }
+                $this->setApplicationLocale($noExt);
 
                 if ($fileinfo->isDir()) {
                     $local = $this->allocateLocaleArray($fileinfo->getRealPath());
@@ -113,6 +116,8 @@ class Generator
      */
     public function generateMultiple($path, $format = 'es6', $multiLocales = false)
     {
+        $this->assertValidFormat($format);
+
         if (! is_dir($path)) {
             throw new Exception('Directory not found: '.$path);
         }
@@ -126,9 +131,7 @@ class Generator
             if (! in_array($file, array_merge(['vendor'], $this->config['excludes']))) {
                 $noExt = $this->removeExtension($file);
                 if ($noExt !== '') {
-                    if (class_exists('App')) {
-                        App::setLocale($noExt);
-                    }
+                    $this->setApplicationLocale($noExt);
                     if (! in_array($noExt, $this->availableLocales)) {
                         $this->availableLocales[] = $noExt;
                     }
@@ -156,7 +159,7 @@ class Generator
             $jsBody = $this->buildJsBody($data, $format);
 
             if (! is_dir(dirname($fileToCreate))) {
-                mkdir(dirname($fileToCreate), 0o777, true);
+                mkdir(dirname($fileToCreate), 0o755, true);
             }
 
             file_put_contents($fileToCreate, $jsBody);
@@ -218,8 +221,6 @@ class Generator
 
                 if (gettype($tmp) !== 'array') {
                     throw new Exception('Unexpected data while processing '.$fileName);
-
-                    continue;
                 }
                 if ($lastLocale !== false) {
                     $root = realpath(base_path().$this->config['langPath'].DIRECTORY_SEPARATOR.$lastLocale);
@@ -414,10 +415,6 @@ class Generator
     {
         $jsonLocales = json_encode($locales, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).PHP_EOL;
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Could not generate JSON, error code '.json_last_error());
-        }
-
         // formats other than 'es6' and 'umd' will become plain JSON
         if ($format === 'es6') {
             $jsBody = $this->getES6Module($jsonLocales);
@@ -437,5 +434,21 @@ class Generator
         }
 
         return mb_substr($match, 1);
+    }
+
+    protected function assertValidFormat(string $format): void
+    {
+        if (! in_array($format, self::SUPPORTED_FORMATS, true)) {
+            throw new InvalidArgumentException('Invalid format passed: '.$format);
+        }
+    }
+
+    protected function setApplicationLocale(string $locale): void
+    {
+        if (! function_exists('app')) {
+            return;
+        }
+
+        App::setLocale($locale);
     }
 }

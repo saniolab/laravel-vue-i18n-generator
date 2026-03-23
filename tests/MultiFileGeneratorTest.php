@@ -1,8 +1,14 @@
 <?php
 
-use MartinLindhe\VueInternationalizationGenerator\Generator;
+namespace Tests;
 
-class MultiFileGeneratorTest extends \Orchestra\Testbench\TestCase
+use FilesystemIterator;
+use MartinLindhe\VueInternationalizationGenerator\Generator;
+use Orchestra\Testbench\TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
+class MultiFileGeneratorTest extends TestCase
 {
     private $config = [];
 
@@ -37,7 +43,7 @@ class MultiFileGeneratorTest extends \Orchestra\Testbench\TestCase
         $outDir = base_path().$this->config['jsPath'];
         $this->config['langPath'] = '/tests/input/'.$input;
 
-        $out = (new Generator($this->config))->generateMultiple(__DIR__.'/input/'.$input, 'es6', $multiLocales);
+        $out = (new Generator($this->config))->generateMultiple(__DIR__.'/input/'.$input, $format, $multiLocales);
         $this->config = [];
 
         $expected = new RecursiveDirectoryIterator(base_path().'/tests/result/'.$expected, FilesystemIterator::SKIP_DOTS);
