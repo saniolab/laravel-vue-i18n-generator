@@ -37,13 +37,13 @@
             "MartinLindhe\\VueInternationalizationGenerator\\": "src/"
         }
     },
-    "config": {
-        "allow-plugins": {
-            "kylekatarnls/update-helper": true
-        },
-        "platform": {
-            "php": "8.6.0"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
